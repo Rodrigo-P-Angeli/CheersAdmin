@@ -3,20 +3,37 @@
 /* eslint-disable prettier/prettier */
 
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, ImageBackground, Button, Image } from 'react-native'
+import { Text, StyleSheet, View, ImageBackground, Button, Image, FlatList, ScrollView } from 'react-native'
 import CommonStyles from '../CommonStyles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import database from '@react-native-firebase/database'
 
 const initialState = {
-
+    pedidos: []
 }
 
 export default class Auth extends Component {
-
+    state = {
+        ...initialState
+    }
+    componentDidMount() {
+        database()
+            .ref('/pedidos')
+            .on('value', snapshot => {
+                this.setState({ pedidos: [snapshot.val()] })
+            })
+    }
     render() {
         return (
             <ImageBackground style={styles.backgroung} source={require('../assets/images/BackGround.jpg')}>
-
+                <FlatList
+                    data={this.state.pedidos}
+                    keyExtractor={item => item}
+                    renderItem={item => <View><Text>{JSON.stringify(item)}</Text></View>}
+                />
+                <ScrollView>
+                    <Text>{JSON.stringify(this.state.pedidos)}</Text>
+                </ScrollView>
             </ImageBackground>
         )
     }

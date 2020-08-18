@@ -6,7 +6,7 @@ import { ActivityIndicator, View, StyleSheet } from 'react-native'
 
 export default class AuthorApp extends Component {
     componentDidMount = async () => {
-        await this.props.loadUser()
+        // await this.props.loadUser()
         await this.props.finishedLoadUser()
     }
     render() {

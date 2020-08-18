@@ -27,7 +27,7 @@ export const logout = () => {
 export const login = (email, senha) => {
     return async dispatch => {
         try {
-            const user = await auth().signInWithEmailAndPassword(email, senha)
+            await auth().signInWithEmailAndPassword(email, senha)
         } catch (err) {
             console.log(err)
         }
@@ -60,7 +60,7 @@ export const createUser = (nome, email, senha) => {
 export const loadUser = () => {
     return async dispatch => {
         dispatch(loadingUserFunction())
-        /*let endereco = null
+        let endereco = null
         let fidelidade = null
         try {
             let user = await auth().currentUser
@@ -71,14 +71,13 @@ export const loadUser = () => {
                 await database().ref('users').child(`${user.uid}/fidelidade`)
                     .once('value').then(snapshot => {
                         snapshot.val() ? fidelidade = snapshot.val() : fidelidade = 0
-                        dispatch(userSignIn(user, endereco, fidelidade))
+                        dispatch(userSignIn(user))
                     }).catch(e => console.log('erro ao carregar plano fidelidade', e))
             }
         } catch (e) {
             console.log(e, 'deu erro')
-        }*/
+        }
         dispatch(userSignIn(user))
-
     }
 }
 

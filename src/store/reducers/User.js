@@ -32,17 +32,9 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case USER_LOGGING:
-            let endereco = null
-            if (!action.payload.endereco) {
-                endereco = state.endereco
-            } else {
-                endereco = action.payload.endereco
-            }
             return {
                 ...state,
                 user: action.payload.user,
-                endereco: endereco,
-                fidelidade: action.payload.fidelidade,
             }
         case USER_LOGOUT:
             return {

@@ -15,7 +15,7 @@ import Pedidos from './screens/Pedidos'
 import SplashScreen from './screens/SplashScreen';
 import { connect } from 'react-redux';
 
-import { onGoogleButtonPress, logout, loadUser, userSignIn, finishedLoadingUser, loadingUserFunction, createUser, login, onFacebookButtonPress } from './store/actions/user'
+import { logout, loadUser, userSignIn, finishedLoadingUser, loadingUserFunction, createUser, login } from './store/actions/user'
 import Auth from './screens/Auth';
 
 import CommonStyles from './CommonStyles';
@@ -117,7 +117,6 @@ const mapStateToProps = ({ user }) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        onGoogleButtonPress: () => dispatch(onGoogleButtonPress()),
         loadUser: () => dispatch(loadUser()),
         userSignIn: (user) => dispatch(userSignIn(user)),
         logout: () => dispatch(logout()),
@@ -125,7 +124,6 @@ const mapDispatchToProps = (dispatch) => {
         finishedLoadingUser: () => dispatch(finishedLoadingUser()),
         createUser: (name, email, senha) => dispatch(createUser(name, email, senha)),
         loginUser: (email, senha) => dispatch(login(email, senha)),
-        onFacebookButtonPress: () => dispatch(onFacebookButtonPress()),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(App)
