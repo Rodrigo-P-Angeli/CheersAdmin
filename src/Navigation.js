@@ -11,19 +11,14 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import MenuDrawer from './components/MenuDrawer'
-import Cardapio from './screens/Cardapio'
-import DadosCliente from './screens/DadosCliente'
-import ClienteFidelidade from './screens/ClienteFidelidade';
+import Pedidos from './screens/Pedidos'
 import SplashScreen from './screens/SplashScreen';
 import { connect } from 'react-redux';
 
 import { onGoogleButtonPress, logout, loadUser, userSignIn, finishedLoadingUser, loadingUserFunction, createUser, login, onFacebookButtonPress } from './store/actions/user'
-import PedidosRealizados from './screens/PedidosRealizados2';
 import Auth from './screens/Auth';
 
 import CommonStyles from './CommonStyles';
-import DadosCliente2 from './screens/DadosCliente2';
-import ConfirmaPedido from './screens/ConfirmaPedido';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -34,13 +29,13 @@ const initialState = {
     isLoading: true,
 }
 
-/*class BottomTab extends Component {
+class BottomTab extends Component {
     render() {
         return (
             <Tab.Navigator initialRouteName="Cardápio" backBehavior={'initialRoute'} tabBarOptions={tabBar}>
                 <Tab.Screen
                     name="Cardápio"
-                    component={Cardapio}
+                    component={Pedidos}
                     options={{
                         tabBarLabel: 'Cardápio',
                         tabBarIcon: ({ color, size }) => (
@@ -48,7 +43,7 @@ const initialState = {
                         ),
                     }}
                 />
-                <Tab.Screen
+                {/* <Tab.Screen
                     name="Dados do Cliente"
                     component={DadosCliente2}
                     options={{
@@ -57,7 +52,7 @@ const initialState = {
                             <MaterialIcons name="person" color={color} size={size} />
                         ),
                     }}
-                />
+                /> */}
             </Tab.Navigator>
         )
     }
@@ -72,12 +67,10 @@ class AppDrawer extends Component {
                 drawerContentOptions={drawerOptions}
                 backBehavior={'initialRoute'} >
                 <Drawer.Screen name="Cardapio" component={BottomTab} backBehavior={'none'} />
-                <Drawer.Screen name="Plano Fidelidade" component={ClienteFidelidade} backBehavior={'initialRoute'} />
-                <Drawer.Screen name="Pedidos Realizados" component={PedidosRealizados} backBehavior={'initialRoute'} />
             </Drawer.Navigator>
         )
     }
-}*/
+}
 
 class AppStack extends Component {
     render() {
@@ -86,9 +79,9 @@ class AppStack extends Component {
                 <Stack.Screen name="AppDrawer">
                     {() => <AppDrawer {...this.props} onSignOut={() => this.props.logout()} />}
                 </Stack.Screen>
-                <Stack.Screen name="FinalizarPedido">
+                {/* <Stack.Screen name="FinalizarPedido">
                     {(props) => <ConfirmaPedido {...props} {...this.props} />}
-                </Stack.Screen>
+                </Stack.Screen> */}
             </Stack.Navigator>
         )
     }

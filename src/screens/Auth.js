@@ -10,8 +10,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const initialState = {
     name: '',
-    email: '',
-    password: '',
+    email: 'julia_norbim@hotmail.com',
+    password: 'z1o2i3o4',
     confirmPassword: '',
     stageNew: false,
     secureTextSenha: true,
@@ -34,7 +34,7 @@ export default class Auth extends Component {
 
         const validForm = validation.reduce((a, d) => a && d)
         return (
-            <ImageBackground style={styles.backgroung} source={require('../../assets/images/BackGround.jpg')}>
+            <ImageBackground style={styles.backgroung} source={require('../assets/images/BackGround.jpg')}>
                 <Text style={styles.title}>Cheers</Text>
                 <View style={styles.formContainer}>
                     <Text style={styles.subTitle}>{this.state.stageNew ? 'Crie a sua conta' : 'Entrar com E-mail'}</Text>
