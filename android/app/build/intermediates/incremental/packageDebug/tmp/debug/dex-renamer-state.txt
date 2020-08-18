@@ -1,4 +1,4 @@
-#Mon Aug 17 18:03:36 BRT 2020
+#Mon Aug 17 21:59:49 BRT 2020
 base.2=C\:\\Users\\Ruindows\\Desktop\\CheersAdmin\\android\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes3.dex
 path.2=classes3.dex
 base.1=C\:\\Users\\Ruindows\\Desktop\\CheersAdmin\\android\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes2.dex

@@ -1,7 +1,5 @@
 import auth from '@react-native-firebase/auth'
 import database from '@react-native-firebase/database'
-import { GoogleSignin } from '@react-native-community/google-signin';
-import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
 import {
     USER_LOGGING,
@@ -15,10 +13,6 @@ import {
     LOADING_USER,
     FINISHED_LOADING_USER,
 } from '../ActionsTypes'
-
-GoogleSignin.configure({
-    webClientId: '892771746259-251tnb3pc7f01nol5dc2pgk85rl1cqai.apps.googleusercontent.com',
-});
 
 export const logout = () => {
     return async dispatch => {
@@ -63,48 +57,10 @@ export const createUser = (nome, email, senha) => {
     }
 }
 
-export const onGoogleButtonPress = () => {
-    return async dispatch => {
-        // Get the users ID token
-        const { idToken } = await GoogleSignin.signIn();
-        //this.setState({ idToken })
-        // Create a Google credential with the token
-        const googleCredential = await auth.GoogleAuthProvider.credential(idToken);
-        // Sign-in the user with the credential
-        await auth().signInWithCredential(googleCredential);
-        dispatch(loadUser())
-    }
-}
-
-export const onFacebookButtonPress = () => {
-    return async dispatch => {
-        // Attempt login with permissions
-        const result = await LoginManager.logInWithPermissions(['public_profile', 'email'])
-
-        if (result.isCancelled) {
-            throw 'User cancelled the login process';
-        }
-
-        // Once signed in, get the users AccesToken
-        const data = await AccessToken.getCurrentAccessToken();
-
-        if (!data) {
-            throw 'Something went wrong obtaining access token';
-        }
-
-        // Create a Firebase credential with the AccessToken
-        const facebookCredential = await auth.FacebookAuthProvider.credential(data.accessToken);
-
-        // Sign-in the user with the credential
-        await auth().signInWithCredential(facebookCredential);
-        dispatch(loadUser())
-    }
-}
-
 export const loadUser = () => {
     return async dispatch => {
         dispatch(loadingUserFunction())
-        let endereco = null
+        /*let endereco = null
         let fidelidade = null
         try {
             let user = await auth().currentUser
@@ -120,8 +76,8 @@ export const loadUser = () => {
             }
         } catch (e) {
             console.log(e, 'deu erro')
-        }
-
+        }*/
+        dispatch(userSignIn(user))
 
     }
 }
@@ -194,13 +150,11 @@ export const onChangeComplemento = (text) => {
     }
 }
 
-export const userSignIn = (user, endereco, fidelidade) => {
+export const userSignIn = (user) => {
     return {
         type: USER_LOGGING,
         payload: {
             user,
-            endereco,
-            fidelidade,
         }
     }
 }
