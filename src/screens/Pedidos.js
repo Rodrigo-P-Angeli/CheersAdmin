@@ -4,9 +4,14 @@
 
 import React, { Component } from 'react'
 import { Text, StyleSheet, View, ImageBackground, Button, Image, FlatList, ScrollView } from 'react-native'
-import CommonStyles from '../CommonStyles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import Swipeable from 'react-native-gesture-handler/Swipeable'
 import database from '@react-native-firebase/database'
+import Moment from 'moment'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+
+import CommonStyles from '../CommonStyles'
+import Header from '../components/Header'
 
 const initialState = {
     pedidos: []
@@ -20,20 +25,71 @@ export default class Auth extends Component {
         database()
             .ref('/pedidos')
             .on('value', snapshot => {
-                this.setState({ pedidos: [snapshot.val()] })
+                let perdidos = []
+                snapshot.forEach(function (userSnap) {
+                    if (userSnap.val().status == 'Envidado' || userSnap.val().status == 'Recebido') {
+                        perdidos.push({ ...userSnap.val(), numeroPedido: userSnap.key })
+                    }
+                });
+                this.setState({ pedidos: perdidos })
             })
     }
+    onPressPedido = (id) => {
+        database()
+            .ref(`/pedidos/${id}`)
+            .update({ status: 'Recebido' })
+    }
+    onlongPressPedido = (id) => {
+        database()
+            .ref(`/pedidos/${id}`)
+            .update({ status: 'Entrege' })
+    }
     render() {
+        const getLeftContent = () => {
+            return (
+                <View style={styles.left}>
+                    <FontAwesome name={'motorcycle'} size={20} color={'#FFF'} style={styles.excludesIcon} />
+                    <Text style={styles.excludeText}>Entrege</Text>
+                </View>
+            )
+        }
+        const getRightContent = (id) => {
+            return (
+                <TouchableOpacity onPress={() => this.onlongPressPedido(id)} style={styles.right}>
+                    <FontAwesome name={'motorcycle'} size={20} color={'#FFF'} />
+                </TouchableOpacity>
+            )
+        }
         return (
             <ImageBackground style={styles.backgroung} source={require('../assets/images/BackGround.jpg')}>
+                <Header {...this.props} />
                 <FlatList
+                    style={{ flex: 1 }}
                     data={this.state.pedidos}
-                    keyExtractor={item => item}
-                    renderItem={item => <View><Text>{JSON.stringify(item)}</Text></View>}
+                    keyExtractor={(item) => `${item.numeroPedido}`}
+                    renderItem={({ item }) =>
+                        <Swipeable
+                            onSwipeableLeftOpen={() => this.onlongPressPedido(item.numeroPedido)}
+                            renderLeftActions={() => getLeftContent(item.numeroPedido)}
+                            renderRightActions={() => getRightContent(item.numeroPedido)}>
+                            <TouchableOpacity onPress={() => this.onPressPedido(item.numeroPedido)} activeOpacity={0.6} key={item.numeroPedido} style={{ backgroundColor: 'white', margin: 5, padding: 5, borderRadius: 10 }} elevation={5}>
+                                <View style={styles.item}>
+                                    <View style={{ height: 100, flex: 2, justifyContent: 'space-between' }}>
+                                        <Text style={styles.text}>Data: {Moment(item.data).format('DD/MM/YYYY h:mm:ss a')}</Text>
+                                        <Text style={styles.text}>Entrega em: {item.endereco.rua}, n° {item.endereco.numero}, {item.endereco.bairro}, {item.endereco.cidade}, {item.endereco.estado}{item.endereco.complemento ? `, ${item.endereco.complemento}` : null}</Text>
+                                        <Text style={styles.text}>Status: {item.status}</Text>
+                                    </View>
+                                    <View style={{ height: 100, flex: 1, justifyContent: 'space-between' }}>
+                                        <Text style={styles.text}># {item.numeroPedido}</Text>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <Text style={[styles.text, { fontSize: 15 }]}>{'Total:\nR$'}</Text>
+                                            <Text style={[styles.text, { flex: 1, textAlign: 'right', fontSize: 20 }]}>{item.total.toFixed(2).replace('.', ',')}</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        </Swipeable>}
                 />
-                <ScrollView>
-                    <Text>{JSON.stringify(this.state.pedidos)}</Text>
-                </ScrollView>
             </ImageBackground>
         )
     }
@@ -43,81 +99,48 @@ const styles = StyleSheet.create({
     backgroung: {
         flex: 1,
         resizeMode: 'contain',
-        alignItems: 'center',
         justifyContent: 'center',
 
     },
-    title: {
-        fontFamily: CommonStyles.fontFamilyTitle,
-        color: CommonStyles.Colors.secundary,
-        fontSize: 70,
-        marginBottom: 10,
-    },
-    subTitle: {
-        color: 'white',
-        fontFamily: CommonStyles.fontFamily,
-        fontSize: 20,
-        textAlign: 'center',
-        marginBottom: 10,
-    },
-    input: {
-        marginTop: 10,
-        backgroundColor: 'white',
-    },
-    formContainer: {
-        backgroundColor: 'rgba(0,0,0,0.8)',
-        paddingTop: 20,
-        paddingRight: 20,
-        paddingLeft: 20,
-        width: '90%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    buttonText: {
-        fontFamily: CommonStyles.fontFamily,
-        color: 'white',
-        fontSize: 20,
-    },
-    loginButton: {
-        backgroundColor: CommonStyles.Colors.logginButton,
-        fontFamily: CommonStyles.fontFamily,
-    },
-    loginButtonText: {
-        fontFamily: CommonStyles.fontFamily,
-        color: 'white',
-    },
-    buttonContainer: {
-        height: 45,
+    item: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
         alignItems: 'center',
-        marginBottom: 10,
-        width: 250,
+        justifyContent: 'space-between',
+        borderColor: CommonStyles.Colors.buttons,
+        padding: 5,
         borderRadius: 5,
-        padding: 10,
+        backgroundColor: 'white',
+        borderWidth: 1,
+        height: 100,
     },
-    fabookButton: {
-        backgroundColor: "#3b5998",
-    },
-    loginText: {
-        color: 'white',
+    text: {
         fontFamily: CommonStyles.fontFamily,
-        flex: 9,
-        paddingLeft: 15,
+        fontSize: 15,
     },
-    icon: {
-        width: 30,
-        height: 30,
-        flex: 2,
-        resizeMode: 'contain'
-    },
-    socialButtonContent: {
+    right: {
+        backgroundColor: 'red',
         flexDirection: 'row',
-        //justifyContent: 'flex-end',
-        //alignContent: 'flex-start',
         alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingHorizontal: 20,
+        flex: 1,
+        marginBottom: 10,
+        marginTop: 10,
     },
-    googleButton: {
-        backgroundColor: "#ff0000",
+    left: {
+        flex: 1,
+        backgroundColor: 'red',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+        marginTop: 10,
+    },
+    excludeText: {
+        color: 'white',
+        fontSize: 20,
+        margin: 10,
+    },
+    excludesIcon: {
+        margin: 10,
     },
 })

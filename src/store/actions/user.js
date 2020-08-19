@@ -60,24 +60,14 @@ export const createUser = (nome, email, senha) => {
 export const loadUser = () => {
     return async dispatch => {
         dispatch(loadingUserFunction())
-        let endereco = null
-        let fidelidade = null
         try {
             let user = await auth().currentUser
             if (user) {
-                await database().ref('users').child(`${user.uid}/endereco`).once('value').then(
-                    snapshot => snapshot.val() ? endereco = snapshot.val() : endereco = null
-                ).catch(e => console.log('erro ao carregar endereço', e))
-                await database().ref('users').child(`${user.uid}/fidelidade`)
-                    .once('value').then(snapshot => {
-                        snapshot.val() ? fidelidade = snapshot.val() : fidelidade = 0
-                        dispatch(userSignIn(user))
-                    }).catch(e => console.log('erro ao carregar plano fidelidade', e))
+                dispatch(userSignIn(user))
             }
         } catch (e) {
             console.log(e, 'deu erro')
         }
-        dispatch(userSignIn(user))
     }
 }
 
