@@ -23,7 +23,7 @@ export default class Auth extends Component {
     }
     componentDidMount() {
         database()
-            .ref('/pedidos')
+            .ref('/pedidos').orderByKey()
             .on('value', snapshot => {
                 let perdidos = []
                 snapshot.forEach(function (userSnap) {
@@ -31,7 +31,7 @@ export default class Auth extends Component {
                         perdidos.push({ ...userSnap.val(), numeroPedido: userSnap.key })
                     }
                 });
-                this.setState({ pedidos: perdidos })
+                this.setState({ pedidos: perdidos.reverse() })
             })
     }
     onPressPedido = (id) => {
@@ -39,10 +39,23 @@ export default class Auth extends Component {
             .ref(`/pedidos/${id}`)
             .update({ status: 'Recebido' })
     }
-    onlongPressPedido = (id) => {
+    onlongPressPedido = (id, uid) => {
         database()
             .ref(`/pedidos/${id}`)
             .update({ status: 'Entrege' })
+            .then(
+                snapshot => {
+                    database()
+                        .ref(`users/${uid}/fidelidade`)
+                        .once('value')
+                        .then(snap =>
+                            database()
+                                .ref(`users/${uid}`)
+                                .update({ fidelidade: snap.val() + 1 }))
+                        .catch(e => console.log(e))
+                }
+            )
+            .catch(e => console.log(e))
     }
     render() {
         const getLeftContent = () => {
@@ -53,9 +66,9 @@ export default class Auth extends Component {
                 </View>
             )
         }
-        const getRightContent = (id) => {
+        const getRightContent = (id, uid) => {
             return (
-                <TouchableOpacity onPress={() => this.onlongPressPedido(id)} style={styles.right}>
+                <TouchableOpacity onPress={() => this.onlongPressPedido(id, uid)} style={styles.right}>
                     <FontAwesome name={'motorcycle'} size={20} color={'#FFF'} />
                 </TouchableOpacity>
             )
@@ -69,9 +82,9 @@ export default class Auth extends Component {
                     keyExtractor={(item) => `${item.numeroPedido}`}
                     renderItem={({ item }) =>
                         <Swipeable
-                            onSwipeableLeftOpen={() => this.onlongPressPedido(item.numeroPedido)}
-                            renderLeftActions={() => getLeftContent(item.numeroPedido)}
-                            renderRightActions={() => getRightContent(item.numeroPedido)}>
+                            onSwipeableLeftOpen={() => this.onlongPressPedido(item.numeroPedido, item.uid)}
+                            renderLeftActions={() => getLeftContent(item.numeroPedido, item.uid)}
+                            renderRightActions={() => getRightContent(item.numeroPedido, item.uid)}>
                             <TouchableOpacity onPress={() => this.onPressPedido(item.numeroPedido)} activeOpacity={0.6} key={item.numeroPedido} style={{ backgroundColor: 'white', margin: 5, padding: 5, borderRadius: 10 }} elevation={5}>
                                 <View style={styles.item}>
                                     <View style={{ height: 100, flex: 2, justifyContent: 'space-between' }}>

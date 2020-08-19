@@ -12,6 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import MenuDrawer from './components/MenuDrawer'
 import Pedidos from './screens/Pedidos'
+import PedidosFechados from './screens/PedidosFechados'
 import SplashScreen from './screens/SplashScreen';
 import { connect } from 'react-redux';
 
@@ -32,12 +33,12 @@ const initialState = {
 class BottomTab extends Component {
     render() {
         return (
-            <Tab.Navigator initialRouteName="Cardápio" backBehavior={'initialRoute'} tabBarOptions={tabBar}>
+            <Tab.Navigator initialRouteName="Pedidos em aberto" backBehavior={'initialRoute'} tabBarOptions={tabBar}>
                 <Tab.Screen
-                    name="Cardápio"
+                    name="Pedidos em aberto"
                     component={Pedidos}
                     options={{
-                        tabBarLabel: 'Cardápio',
+                        tabBarLabel: 'Pedidos em aberto',
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="beer" color={color} size={size} />
                         ),
@@ -62,11 +63,12 @@ class AppDrawer extends Component {
     render() {
         return (
             <Drawer.Navigator
-                initialRouteName="Cardapio"
+                initialRouteName="Pedidos Abertos"
                 drawerContent={props => <MenuDrawer {...props} user={this.props.user} onSignOut={this.props.onSignOut} />}
                 drawerContentOptions={drawerOptions}
                 backBehavior={'initialRoute'} >
-                <Drawer.Screen name="Cardapio" component={BottomTab} backBehavior={'none'} />
+                <Drawer.Screen name="Pedidos Abertos" component={BottomTab} backBehavior={'none'} />
+                <Drawer.Screen name="Pedidos Fechados" component={PedidosFechados} backBehavior={'none'} />
             </Drawer.Navigator>
         )
     }
