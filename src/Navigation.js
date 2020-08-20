@@ -21,6 +21,7 @@ import { logout, loadUser, userSignIn, finishedLoadingUser, loadingUserFunction,
 import Auth from './screens/Auth';
 
 import CommonStyles from './CommonStyles';
+import EditItem from './components/EditItem';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -68,9 +69,9 @@ class AppDrawer extends Component {
                 drawerContent={props => <MenuDrawer {...props} user={this.props.user} onSignOut={this.props.onSignOut} />}
                 drawerContentOptions={drawerOptions}
                 backBehavior={'initialRoute'} >
-                <Drawer.Screen name="Pedidos Abertos" component={BottomTab} backBehavior={'none'} />
-                <Drawer.Screen name="Pedidos Fechados" component={PedidosFechados} backBehavior={'none'} />
-                <Drawer.Screen name="Cardapio" component={EditCardapio} backBehavior={'none'} />
+                <Drawer.Screen name="Pedidos Abertos" component={BottomTab} />
+                <Drawer.Screen name="Pedidos Fechados" component={PedidosFechados} />
+                <Drawer.Screen name="Cardapio" component={AppStack} />
             </Drawer.Navigator>
         )
     }
@@ -79,13 +80,13 @@ class AppDrawer extends Component {
 class AppStack extends Component {
     render() {
         return (
-            <Stack.Navigator headerMode="none">
-                <Stack.Screen name="AppDrawer">
-                    {() => <AppDrawer {...this.props} onSignOut={() => this.props.logout()} />}
+            <Stack.Navigator headerMode='screen'>
+                <Stack.Screen name="EditCardapio">
+                    {(props) => <EditCardapio {...props} {...this.props} />}
                 </Stack.Screen>
-                {/* <Stack.Screen name="FinalizarPedido">
-                    {(props) => <ConfirmaPedido {...props} {...this.props} />}
-                </Stack.Screen> */}
+                <Stack.Screen name="FinalizarPedido" >
+                    {(props) => <EditItem {...props} />}
+                </Stack.Screen>
             </Stack.Navigator>
         )
     }
@@ -101,7 +102,7 @@ class App extends Component {
                             {() => <SplashScreen loadUser={this.props.loadingUserFunction} finishedLoadUser={this.props.finishedLoadingUser} {...this.props} />}
                         </Stack.Screen> : this.props.user ?
                             <Stack.Screen name="Cardápio">
-                                {() => <AppStack {...this.props} />}
+                                {() => <AppDrawer {...this.props} onSignOut={() => this.props.logout()} />}
                             </Stack.Screen> :
                             <Stack.Screen name="Login" >
                                 {() => <Auth {...this.props} FacebookButtonPress={this.props.onFacebookButtonPress} GoogleButtonPress={this.props.onGoogleButtonPress} createUser={this.props.createUser} loginUser={this.props.loginUser} />}

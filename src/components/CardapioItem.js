@@ -9,7 +9,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 export default class ItemCardapio extends Component {
     render() {
         return (
-            <TouchableOpacity onPress={() => { }} activeOpacity={.7}>
+            <TouchableOpacity onLongPress={() => this.props.onDelete(this.props.id)} onPress={() => this.props.navigation.navigate('FinalizarPedido', this.props)} activeOpacity={.7}>
                 <View style={{ padding: 5, paddingBottom: 0 }}>
                     <View elevation={2} style={styles.containerOutside}>
                         <View style={styles.container}>
