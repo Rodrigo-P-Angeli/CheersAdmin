@@ -17,7 +17,7 @@ const initialState = {
     pedidos: []
 }
 
-export default class Auth extends Component {
+export default class Pedidos extends Component {
     state = {
         ...initialState
     }

@@ -13,6 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MenuDrawer from './components/MenuDrawer'
 import Pedidos from './screens/Pedidos'
 import PedidosFechados from './screens/PedidosFechados'
+import EditCardapio from './screens/EditCardapio'
 import SplashScreen from './screens/SplashScreen';
 import { connect } from 'react-redux';
 
@@ -69,6 +70,7 @@ class AppDrawer extends Component {
                 backBehavior={'initialRoute'} >
                 <Drawer.Screen name="Pedidos Abertos" component={BottomTab} backBehavior={'none'} />
                 <Drawer.Screen name="Pedidos Fechados" component={PedidosFechados} backBehavior={'none'} />
+                <Drawer.Screen name="Cardapio" component={EditCardapio} backBehavior={'none'} />
             </Drawer.Navigator>
         )
     }
