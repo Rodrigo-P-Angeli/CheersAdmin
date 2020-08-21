@@ -1,4 +1,4 @@
-#Thu Aug 20 20:58:55 BRT 2020
+#Thu Aug 20 21:40:53 BRT 2020
 base.0=C\:\\Users\\Ruindows\\Desktop\\CheersAdmin\\android\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\out\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

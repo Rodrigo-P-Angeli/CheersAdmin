@@ -27,7 +27,7 @@ export default class Pedidos extends Component {
             .on('value', snapshot => {
                 let perdidos = []
                 snapshot.forEach(function (userSnap) {
-                    if (userSnap.val().status == 'Envidado' || userSnap.val().status == 'Recebido') {
+                    if (userSnap.val().status != 'Entregue') {
                         perdidos.push({ ...userSnap.val(), numeroPedido: userSnap.key })
                     }
                 });
@@ -42,7 +42,7 @@ export default class Pedidos extends Component {
     onlongPressPedido = (id, uid) => {
         database()
             .ref(`/pedidos/${id}`)
-            .update({ status: 'Entrege' })
+            .update({ status: 'Entregue' })
             .then(
                 snapshot => {
                     database()
